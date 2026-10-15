@@ -1,7 +1,9 @@
+import TimerCard from "@/components/TimerCard";
+
 export default function Home() {
   return (
-    <main className="flex flex-1 items-center justify-center">
-      <h1 className="text-4xl font-semibold">Pomodaisy</h1>
+    <main className="flex flex-1 items-center justify-center bg-zinc-100">
+      <TimerCard />
     </main>
   );
 }
