@@ -70,13 +70,16 @@ export default function TimerCard() {
     setStatus("not_started");
   }
 
+  function handleReset() {
+    setStatus("not_started");
+  }
 
   return (
     <section className="flex flex-col items-center gap-8 rounded-3xl bg-white p-10 shadow-lg">
       <ControlRow
         status={status}
         onPlayPause={handlePlayPause}
-        onReset={() => {}}
+        onReset={handleReset}
         onOpenSettings={() => {}}
       />
       <div className="relative grid size-64 place-items-center">

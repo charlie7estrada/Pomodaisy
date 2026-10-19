@@ -22,7 +22,7 @@ export default function ControlRow({
         {status === "running" ? "Pause" : "Play"}
       </button>
       <button type="button" onClick={onReset} className={buttonClass}>
-        Restart
+        Reset
       </button>
       <button type="button" onClick={onOpenSettings} className={buttonClass}>
         Settings
