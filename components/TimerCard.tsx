@@ -5,6 +5,7 @@ import ControlRow from "./ControlRow";
 import ModeButtons from "./ModeButtons";
 import ProgressRing from "./ProgressRing";
 import TimeDisplay from "./TimeDisplay";
+import { playAlarm, unlockAudio } from "@/lib/alarm";
 import { DEFAULT_DURATIONS, type Mode, type Status } from "@/lib/timer";
 
 // How often the screen refreshes while running. Time is read from the clock,
@@ -46,7 +47,14 @@ export default function TimerCard() {
     return () => clearInterval(id);
   }, [status, endsAt]);
 
+  useEffect(() => {
+    if (status === "done") {
+      playAlarm();
+    }
+  }, [status]);
+
   function startRun(remainingMs: number) {
+    unlockAudio();
     const current = Date.now();
     setNow(current);
     setEndsAt(current + remainingMs);
