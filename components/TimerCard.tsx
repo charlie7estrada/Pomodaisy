@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import ControlRow from "./ControlRow";
 import ModeButtons from "./ModeButtons";
 import ProgressRing from "./ProgressRing";
+import SettingsDialog from "./SettingsDialog";
 import TimeDisplay from "./TimeDisplay";
 import { playAlarm, unlockAudio } from "@/lib/alarm";
 import { DEFAULT_DURATIONS, type Mode, type Status } from "@/lib/timer";
@@ -19,8 +20,11 @@ export default function TimerCard() {
   const [endsAt, setEndsAt] = useState<number | null>(null);
   const [pausedRemaining, setPausedRemaining] = useState(0);
   const [now, setNow] = useState(0);
+  // Durations are in seconds.
+  const [durations, setDurations] = useState(DEFAULT_DURATIONS);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
-  const duration = DEFAULT_DURATIONS[mode];
+  const duration = durations[mode];
   const durationMs = duration * 1000;
 
   let timeLeftMs = durationMs;
@@ -82,19 +86,31 @@ export default function TimerCard() {
     setStatus("not_started");
   }
 
+  function handleSaveSettings(newDurations: Record<Mode, number>) {
+    setDurations(newDurations);
+    setIsSettingsOpen(false);
+  }
+
   return (
     <section className="flex flex-col items-center gap-8 rounded-3xl bg-white p-10 shadow-lg">
       <ControlRow
         status={status}
         onPlayPause={handlePlayPause}
         onReset={handleReset}
-        onOpenSettings={() => {}}
+        onOpenSettings={() => setIsSettingsOpen(true)}
       />
       <div className="relative grid size-64 place-items-center">
         <ProgressRing timeLeft={timeLeft} duration={duration} />
         <TimeDisplay timeLeft={timeLeft} status={status} />
       </div>
       <ModeButtons activeMode={mode} onSelectMode={handleSelectMode} />
+      {isSettingsOpen && (
+        <SettingsDialog
+          durations={durations}
+          onSave={handleSaveSettings}
+          onClose={() => setIsSettingsOpen(false)}
+        />
+      )}
     </section>
   );
 }

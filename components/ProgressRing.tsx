@@ -9,7 +9,7 @@ const RADIUS = (SIZE - STROKE) / 2;
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
 
 export default function ProgressRing({ timeLeft, duration }: ProgressRingProps) {
-  const fraction = duration > 0 ? timeLeft / duration : 0;
+  const fraction = duration > 0 ? Math.min(1, timeLeft / duration) : 0;
   const offset = CIRCUMFERENCE * (1 - fraction);
 
   return (
