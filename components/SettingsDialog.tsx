@@ -1,14 +1,11 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
-import { MODES, type Mode } from "@/lib/timer";
+import { MAX_MINUTES, MIN_MINUTES, MODES, type Mode } from "@/lib/timer";
 
 type SettingsDialogProps = {
   durations: Record<Mode, number>; // seconds
   onSave: (durations: Record<Mode, number>) => void;
   onClose: () => void;
 };
-
-const MIN_MINUTES = 1;
-const MAX_MINUTES = 180;
 
 // Returns whole minutes in range, or null if the text isn't valid.
 function parseMinutes(text: string): number | null {

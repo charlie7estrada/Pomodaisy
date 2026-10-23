@@ -6,22 +6,28 @@ import ModeButtons from "./ModeButtons";
 import ProgressRing from "./ProgressRing";
 import SettingsDialog from "./SettingsDialog";
 import TimeDisplay from "./TimeDisplay";
+import { savePreferences } from "@/app/actions";
 import { playAlarm, unlockAudio } from "@/lib/alarm";
-import { DEFAULT_DURATIONS, type Mode, type Status } from "@/lib/timer";
+import type { Mode, Status } from "@/lib/timer";
 
 // How often the screen refreshes while running. Time is read from the clock,
 // so this only controls how quickly the display catches up.
 const TICK_MS = 250;
 
-export default function TimerCard() {
-  const [mode, setMode] = useState<Mode>("pomodoro");
+type TimerCardProps = {
+  initialMode: Mode;
+  initialDurations: Record<Mode, number>; // seconds
+};
+
+export default function TimerCard({ initialMode, initialDurations }: TimerCardProps) {
+  const [mode, setMode] = useState(initialMode);
   const [status, setStatus] = useState<Status>("not_started");
   // Times below are in milliseconds.
   const [endsAt, setEndsAt] = useState<number | null>(null);
   const [pausedRemaining, setPausedRemaining] = useState(0);
   const [now, setNow] = useState(0);
   // Durations are in seconds.
-  const [durations, setDurations] = useState(DEFAULT_DURATIONS);
+  const [durations, setDurations] = useState(initialDurations);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   const duration = durations[mode];
@@ -80,6 +86,8 @@ export default function TimerCard() {
   function handleSelectMode(newMode: Mode) {
     setMode(newMode);
     setStatus("not_started");
+    // Not awaited: the UI updates immediately; a failed save is just not remembered.
+    savePreferences({ mode: newMode, durations }).catch(() => {});
   }
 
   function handleReset() {
@@ -89,6 +97,7 @@ export default function TimerCard() {
   function handleSaveSettings(newDurations: Record<Mode, number>) {
     setDurations(newDurations);
     setIsSettingsOpen(false);
+    savePreferences({ mode, durations: newDurations }).catch(() => {});
   }
 
   return (
