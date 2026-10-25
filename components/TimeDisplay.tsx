@@ -7,7 +7,7 @@ type TimeDisplayProps = {
 
 export default function TimeDisplay({ timeLeft, status }: TimeDisplayProps) {
   return (
-    <p className="relative text-6xl font-bold tabular-nums">
+    <p className="relative text-6xl font-semibold tabular-nums">
       {status === "done" ? "Done!" : formatTime(timeLeft)}
     </p>
   );

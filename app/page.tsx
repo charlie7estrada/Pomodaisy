@@ -5,7 +5,7 @@ import { PREFERENCES_COOKIE, parsePreferencesCookie } from "@/lib/preferences";
 
 export default function Home() {
   return (
-    <main className="flex flex-1 items-center justify-center bg-zinc-100">
+    <main className="flex flex-1 items-center justify-center">
       {/* Cache Components require a Suspense boundary around cookie reads. */}
       <Suspense fallback={null}>
         <SavedTimerCard />

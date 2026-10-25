@@ -1,1 +1,38 @@
 @import "tailwindcss";
+
+/* Pomodaisy theme. Colors, font, and background motion all live here */
+@theme {
+  --color-daisy: #f4c542;
+  --color-daisy-deep: #d9a62e;
+  --color-cream: #fbf6ec;
+  --color-taupe: #b8a99a;
+  --color-bark: #6b4f3a;
+  --color-ink: #3e2c20;
+
+  /* Each blob drifts out and back ("alternate"), so a 30s animation is a
+     60s round trip. Slightly different lengths keep them out of step. */
+  --animate-drift-a: drift-a 10s ease-in-out infinite alternate;
+  --animate-drift-b: drift-b 16s ease-in-out infinite alternate;
+  --animate-drift-c: drift-c 7s ease-in-out infinite alternate;
+
+  @keyframes drift-a {
+    to {
+      transform: translate(25vw, 15vh);
+    }
+  }
+  @keyframes drift-b {
+    to {
+      transform: translate(-20vw, -20vh);
+    }
+  }
+  @keyframes drift-c {
+    to {
+      transform: translate(-15vw, 20vh);
+    }
+  }
+}
+
+/* next/font sets --font-pixelify on <html>; make it the default font. */
+@theme inline {
+  --font-sans: var(--font-pixelify);
+}
