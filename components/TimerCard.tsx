@@ -101,7 +101,7 @@ export default function TimerCard({ initialMode, initialDurations }: TimerCardPr
   }
 
   return (
-    <section className="flex flex-col items-center gap-8 rounded-3xl bg-white p-10 shadow-lg">
+    <section className="flex flex-col items-center gap-8 rounded-3xl bg-cream/80 p-10 shadow-lg backdrop-blur">
       <ControlRow
         status={status}
         onPlayPause={handlePlayPause}

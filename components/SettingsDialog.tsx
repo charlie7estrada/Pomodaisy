@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
+import { buttonStyles } from "./buttonStyles";
 import { MAX_MINUTES, MIN_MINUTES, MODES, type Mode } from "@/lib/timer";
 
 type SettingsDialogProps = {
@@ -46,7 +47,7 @@ export default function SettingsDialog({ durations, onSave, onClose }: SettingsD
     <dialog
       ref={dialogRef}
       onClose={onClose}
-      className="m-auto w-80 rounded-2xl p-6 shadow-xl backdrop:bg-black/40"
+      className="m-auto w-80 rounded-2xl bg-cream p-6 text-ink shadow-xl backdrop:bg-ink/40"
     >
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <div className="flex items-center justify-between">
@@ -55,7 +56,7 @@ export default function SettingsDialog({ durations, onSave, onClose }: SettingsD
             type="button"
             onClick={onClose}
             aria-label="Close settings"
-            className="rounded px-2 text-xl leading-none text-zinc-500 hover:text-zinc-900"
+            className="rounded px-2 text-xl leading-none text-bark hover:text-ink"
           >
             ×
           </button>
@@ -75,13 +76,13 @@ export default function SettingsDialog({ durations, onSave, onClose }: SettingsD
                 const { value } = event.target;
                 setDraft((prev) => ({ ...prev, [id]: value }));
               }}
-              className="w-20 rounded-lg border border-zinc-300 px-2 py-1 text-right"
+              className="w-20 rounded-lg border-2 border-taupe bg-white/70 px-2 py-1 text-right focus:border-daisy-deep focus:outline-none"
             />
           </label>
         ))}
 
         {!isValid && (
-          <p className="text-sm text-red-600">
+          <p className="text-sm text-red-700">
             Use whole minutes from {MIN_MINUTES} to {MAX_MINUTES}.
           </p>
         )}
@@ -89,7 +90,7 @@ export default function SettingsDialog({ durations, onSave, onClose }: SettingsD
         <button
           type="submit"
           disabled={!isValid}
-          className="rounded-lg bg-zinc-800 px-4 py-2 font-medium text-white hover:bg-zinc-700 disabled:opacity-40"
+          className={buttonStyles.primary}
         >
           Save
         </button>

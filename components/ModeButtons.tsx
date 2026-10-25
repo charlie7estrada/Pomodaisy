@@ -1,4 +1,5 @@
 import { MODES, type Mode } from "@/lib/timer";
+import { buttonStyles } from "./buttonStyles";
 
 type ModeButtonsProps = {
   activeMode: Mode;
@@ -16,11 +17,7 @@ export default function ModeButtons({ activeMode, onSelectMode }: ModeButtonsPro
             type="button"
             onClick={() => onSelectMode(id)}
             aria-pressed={isActive}
-            className={`rounded-lg px-4 py-2 font-medium ${
-              isActive
-                ? "bg-orange-500 text-white"
-                : "bg-zinc-200 text-zinc-700 hover:bg-zinc-300"
-            }`}
+            className={isActive ? buttonStyles.primary : buttonStyles.muted}
           >
             {label}
           </button>

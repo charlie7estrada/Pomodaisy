@@ -1,4 +1,5 @@
 import type { Status } from "@/lib/timer";
+import { buttonStyles } from "./buttonStyles";
 
 type ControlRowProps = {
   status: Status;
@@ -6,9 +7,6 @@ type ControlRowProps = {
   onReset: () => void;
   onOpenSettings: () => void;
 };
-
-const buttonClass =
-  "rounded-lg bg-zinc-800 px-4 py-2 font-medium text-white hover:bg-zinc-700";
 
 export default function ControlRow({
   status,
@@ -18,13 +16,13 @@ export default function ControlRow({
 }: ControlRowProps) {
   return (
     <div className="flex gap-3">
-      <button type="button" onClick={onPlayPause} className={buttonClass}>
+      <button type="button" onClick={onPlayPause} className={buttonStyles.primary}>
         {status === "running" ? "Pause" : "Play"}
       </button>
-      <button type="button" onClick={onReset} className={buttonClass}>
+      <button type="button" onClick={onReset} className={buttonStyles.secondary}>
         Reset
       </button>
-      <button type="button" onClick={onOpenSettings} className={buttonClass}>
+      <button type="button" onClick={onOpenSettings} className={buttonStyles.secondary}>
         Settings
       </button>
     </div>

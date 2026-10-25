@@ -24,7 +24,7 @@ export default function ProgressRing({ timeLeft, duration }: ProgressRingProps) 
         r={RADIUS}
         fill="none"
         strokeWidth={STROKE}
-        className="stroke-zinc-200"
+        className="stroke-taupe/40"
       />
       <circle
         cx={SIZE / 2}
@@ -35,7 +35,7 @@ export default function ProgressRing({ timeLeft, duration }: ProgressRingProps) 
         strokeLinecap="round"
         strokeDasharray={CIRCUMFERENCE}
         strokeDashoffset={offset}
-        className="stroke-orange-500"
+        className="stroke-daisy"
       />
     </svg>
   );
