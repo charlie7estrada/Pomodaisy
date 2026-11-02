@@ -9,8 +9,7 @@
   --color-bark: #6b4f3a;
   --color-ink: #3e2c20;
 
-  /* Each blob drifts out and back ("alternate"), so a 30s animation is a
-     60s round trip. Slightly different lengths keep them out of step. */
+  /* Each blob drifts out and back ("alternate"), so its round trip is twice the time listed. Slightly different lengths keep them out of step. */
   --animate-drift-a: drift-a 10s ease-in-out infinite alternate;
   --animate-drift-b: drift-b 16s ease-in-out infinite alternate;
   --animate-drift-c: drift-c 7s ease-in-out infinite alternate;
@@ -35,4 +34,9 @@
 /* next/font sets --font-pixelify on <html>; make it the default font. */
 @theme inline {
   --font-sans: var(--font-pixelify);
+}
+
+/* Background saturation. 100% is the theme's normal color. */
+:root {
+  --bg-saturation: 100%;
 }
