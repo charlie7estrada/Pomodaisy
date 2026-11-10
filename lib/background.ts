@@ -12,6 +12,7 @@ export const MAX_SPEED = 5;
 export const MIN_SATURATION = 0;
 export const MAX_SATURATION = 200;
 export const SATURATION_STEP = 5;
+export const SPEED_STEP = 0.1;
 
 // Applies settings to the live page. Saturation is a CSS variable the
 // background reads. Speed changes the playback rate of the running blob

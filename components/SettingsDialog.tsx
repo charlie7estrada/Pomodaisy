@@ -3,8 +3,11 @@ import { buttonStyles } from "./buttonStyles";
 import {
   applyBackground,
   MAX_SATURATION,
+  MAX_SPEED,
   MIN_SATURATION,
+  MIN_SPEED,
   SATURATION_STEP,
+  SPEED_STEP,
   type BackgroundSettings,
 } from "@/lib/background";
 import { MAX_MINUTES, MIN_MINUTES, MODES, type Mode } from "@/lib/timer";
@@ -104,6 +107,24 @@ export default function SettingsDialog({
             />
           </label>
         ))}
+
+        <label className="flex flex-col gap-1">
+          <span className="flex justify-between">
+            <span>background speed</span>
+            <span>{draftBackground.speed.toFixed(1)}x</span>
+          </span>
+          <input
+            type="range"
+            min={MIN_SPEED}
+            max={MAX_SPEED}
+            step={SPEED_STEP}
+            value={draftBackground.speed}
+            onChange={(event) =>
+              previewBackground({ ...draftBackground, speed: Number(event.target.value) })
+            }
+            className="accent-daisy-deep"
+          />
+        </label>
 
         <label className="flex flex-col gap-1">
           <span className="flex justify-between">
