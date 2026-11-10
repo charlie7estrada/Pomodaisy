@@ -9,6 +9,8 @@ import TimeDisplay from "./TimeDisplay";
 import { savePreferences } from "@/app/actions";
 import { playAlarm, unlockAudio } from "@/lib/alarm";
 import type { Mode, Status } from "@/lib/timer";
+import { applyBackground, type BackgroundSettings } from "@/lib/background";
+
 
 // How often the screen refreshes while running. Time is read from the clock,
 // so this only controls how quickly the display catches up.
@@ -17,9 +19,14 @@ const TICK_MS = 250;
 type TimerCardProps = {
   initialMode: Mode;
   initialDurations: Record<Mode, number>; // seconds
+  initialBackground: BackgroundSettings;
 };
 
-export default function TimerCard({ initialMode, initialDurations }: TimerCardProps) {
+export default function TimerCard({ 
+  initialMode, 
+  initialDurations,
+  initialBackground,
+ }: TimerCardProps) {
   const [mode, setMode] = useState(initialMode);
   const [status, setStatus] = useState<Status>("not_started");
   // Times below are in milliseconds.
@@ -32,6 +39,9 @@ export default function TimerCard({ initialMode, initialDurations }: TimerCardPr
 
   const duration = durations[mode];
   const durationMs = duration * 1000;
+    // Saved background settings. The settings dialog will update these.
+  const [background] = useState(initialBackground);
+
 
   let timeLeftMs = durationMs;
   if (status === "running" && endsAt !== null) {
@@ -42,6 +52,12 @@ export default function TimerCard({ initialMode, initialDurations }: TimerCardPr
     timeLeftMs = 0;
   }
   const timeLeft = Math.ceil(timeLeftMs / 1000);
+
+  // Background lives outside this component, so saved settings are applied to
+  // the page directly, after hydration and whenever they change.
+  useEffect(() => {
+    applyBackground(background);
+  }, [background]);
 
   useEffect(() => {
     if (status !== "running" || endsAt === null) return;
@@ -87,7 +103,7 @@ export default function TimerCard({ initialMode, initialDurations }: TimerCardPr
     setMode(newMode);
     setStatus("not_started");
     // Not awaited: the UI updates immediately; a failed save is just not remembered.
-    savePreferences({ mode: newMode, durations }).catch(() => {});
+    savePreferences({ mode: newMode, durations, background }).catch(() => {});
   }
 
   function handleReset() {
@@ -97,7 +113,7 @@ export default function TimerCard({ initialMode, initialDurations }: TimerCardPr
   function handleSaveSettings(newDurations: Record<Mode, number>) {
     setDurations(newDurations);
     setIsSettingsOpen(false);
-    savePreferences({ mode, durations: newDurations }).catch(() => {});
+    savePreferences({ mode, durations: newDurations, background }).catch(() => {});
   }
 
   return (

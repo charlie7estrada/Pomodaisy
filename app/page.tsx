@@ -20,6 +20,10 @@ async function SavedTimerCard() {
   const preferences = parsePreferencesCookie(cookieStore.get(PREFERENCES_COOKIE)?.value);
 
   return (
-    <TimerCard initialMode={preferences.mode} initialDurations={preferences.durations} />
+    <TimerCard 
+    initialMode={preferences.mode} 
+    initialDurations={preferences.durations} 
+    initialBackground={preferences.background}
+    />
   );
 }
