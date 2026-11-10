@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import ControlRow from "./ControlRow";
 import ModeButtons from "./ModeButtons";
 import ProgressRing from "./ProgressRing";
-import SettingsDialog from "./SettingsDialog";
+import SettingsDialog, { type SavedSettings } from "./SettingsDialog";
 import TimeDisplay from "./TimeDisplay";
 import { savePreferences } from "@/app/actions";
 import { playAlarm, unlockAudio } from "@/lib/alarm";
@@ -40,7 +40,7 @@ export default function TimerCard({
   const duration = durations[mode];
   const durationMs = duration * 1000;
     // Saved background settings. The settings dialog will update these.
-  const [background] = useState(initialBackground);
+  const [background, setBackground] = useState(initialBackground);
 
 
   let timeLeftMs = durationMs;
@@ -110,10 +110,17 @@ export default function TimerCard({
     setStatus("not_started");
   }
 
-  function handleSaveSettings(newDurations: Record<Mode, number>) {
+  function handleSaveSettings({ durations: newDurations, background: newBackground }: SavedSettings) {
     setDurations(newDurations);
+    setBackground(newBackground);
     setIsSettingsOpen(false);
-    savePreferences({ mode, durations: newDurations, background }).catch(() => {});
+    savePreferences({ mode, durations: newDurations, background: newBackground }).catch(() => {});
+  }
+
+  // Closing without saving (X or Escape) undoes any slider preview.
+  function handleCloseSettings() {
+    applyBackground(background);
+    setIsSettingsOpen(false);
   }
 
   return (
@@ -132,8 +139,9 @@ export default function TimerCard({
       {isSettingsOpen && (
         <SettingsDialog
           durations={durations}
+          background={background}
           onSave={handleSaveSettings}
-          onClose={() => setIsSettingsOpen(false)}
+          onClose={handleCloseSettings}
         />
       )}
     </section>

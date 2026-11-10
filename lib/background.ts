@@ -7,11 +7,11 @@ export type BackgroundSettings = {
 };
 
 export const DEFAULT_BACKGROUND: BackgroundSettings = { speed: 1, saturation: 100 };
-
 export const MIN_SPEED = 0;
 export const MAX_SPEED = 5;
 export const MIN_SATURATION = 0;
 export const MAX_SATURATION = 200;
+export const SATURATION_STEP = 5;
 
 // Applies settings to the live page. Saturation is a CSS variable the
 // background reads. Speed changes the playback rate of the running blob

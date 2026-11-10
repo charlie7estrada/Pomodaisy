@@ -1,10 +1,21 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { buttonStyles } from "./buttonStyles";
+import {
+  applyBackground,
+  MAX_SATURATION,
+  MIN_SATURATION,
+  SATURATION_STEP,
+  type BackgroundSettings,
+} from "@/lib/background";
 import { MAX_MINUTES, MIN_MINUTES, MODES, type Mode } from "@/lib/timer";
 
-type SettingsDialogProps = {
+export type SavedSettings = {
   durations: Record<Mode, number>; // seconds
-  onSave: (durations: Record<Mode, number>) => void;
+  background: BackgroundSettings;
+};
+
+type SettingsDialogProps = SavedSettings & {
+  onSave: (settings: SavedSettings) => void;
   onClose: () => void;
 };
 
@@ -15,7 +26,12 @@ function parseMinutes(text: string): number | null {
   return minutes >= MIN_MINUTES && minutes <= MAX_MINUTES ? minutes : null;
 }
 
-export default function SettingsDialog({ durations, onSave, onClose }: SettingsDialogProps) {
+export default function SettingsDialog({ 
+  durations,
+  background, 
+  onSave, 
+  onClose 
+}: SettingsDialogProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   // Unsaved edits, kept as typed. Discarded when the dialog closes.
   const [draft, setDraft] = useState<Record<Mode, string>>(() => ({
@@ -23,6 +39,7 @@ export default function SettingsDialog({ durations, onSave, onClose }: SettingsD
     short: String(durations.short / 60),
     long: String(durations.long / 60),
   }));
+  const [draftBackground, setDraftBackground] = useState(background);
 
   // The dialog only exists while open, so open it as a modal on mount.
   useEffect(() => {
@@ -32,6 +49,13 @@ export default function SettingsDialog({ durations, onSave, onClose }: SettingsD
 
   const isValid = MODES.every(({ id }) => parseMinutes(draft[id]) !== null);
 
+  // Sliders preview on the live background right away. Closing without
+  // saving restores the saved settings.
+  function previewBackground(next: BackgroundSettings) {
+    setDraftBackground(next);
+    applyBackground(next);
+  }
+
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const saved = { ...durations };
@@ -40,7 +64,7 @@ export default function SettingsDialog({ durations, onSave, onClose }: SettingsD
       if (minutes === null) return;
       saved[id] = minutes * 60;
     }
-    onSave(saved);
+    onSave({ durations: saved, background: draftBackground });
   }
 
   return (
@@ -80,6 +104,24 @@ export default function SettingsDialog({ durations, onSave, onClose }: SettingsD
             />
           </label>
         ))}
+
+        <label className="flex flex-col gap-1">
+          <span className="flex justify-between">
+            <span>background saturation</span>
+            <span>{draftBackground.saturation}%</span>
+          </span>
+          <input
+            type="range"
+            min={MIN_SATURATION}
+            max={MAX_SATURATION}
+            step={SATURATION_STEP}
+            value={draftBackground.saturation}
+            onChange={(event) =>
+              previewBackground({ ...draftBackground, saturation: Number(event.target.value) })
+            }
+            className="accent-daisy-deep"
+          />
+        </label>
 
         {!isValid && (
           <p className="text-sm text-red-700">
