@@ -29,11 +29,19 @@ Live site: https://pomodaisy.vercel.app
 
 **The timer is a small state machine.** It has four statuses: `not_started`, `running`, `paused`, and `done`. A single handler applies the rules for the main button. The interval only exists while the status is `running`, and an effect cleanup stops it whenever the status changes.
 
-**Most values are calculated, not stored.** Time left is calculated from the status on each render (the end time while running, the saved time while paused, the full duration otherwise). Changing a setting or resetting never has to update a separate copy of the time.
+**Most values are calculated on each render.** Time left is calculated from the status on each render (the end time while running, the saved time while paused, the full duration otherwise). Changing a setting or resetting never has to update a separate copy of the time.
 
 **Preferences live in a cookie, written by a Server Action.** The server reads the cookie while rendering, so the saved mode and durations are in the first HTML with no flash. Changes are saved through a Server Action, which validates its input because any client can call it. Bad or missing values fall back to defaults one at a time. Future accounts can replace the cookie with a database without changing the timer component.
 
-**The look is defined in one place.** Colors, the pixel font, and the background animation are theme tokens in `app/globals.css`. Button styles are shared variants in `components/buttonStyles.ts`.
+**The look is defined in one place.** Colors, the font stack, and the background animation are theme tokens in `app/globals.css`. Button styles are shared variants in `components/buttonStyles.ts`.
+
+## Credits
+
+The fonts are in `app/fonts/`, along with any license text their authors included.
+
+- [Early GameBoy](https://www.dafont.com/early-gameboy.font) by Jimmy Campbell. The font file gives its license as Creative Commons Attribution-ShareAlike (copyright LDEJRuff 2012). Included unmodified.
+- [Matcha Style](https://www.dafont.com/matcha-style.font) by Khurasan. Free for personal and commercial use (`app/fonts/matcha-style-license.txt`).
+- [Komika Title](https://www.dafont.com/komika-title.font) by WolfBainX and Apostrophic Labs (Vigilante Typeface Corporation). Freeware (`app/fonts/komika-title-readme.txt`).
 
 ## Run it locally
 
