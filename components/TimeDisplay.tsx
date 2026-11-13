@@ -9,7 +9,7 @@ export default function TimeDisplay({ timeLeft, status }: TimeDisplayProps) {
   const time = formatTime(timeLeft);
 
   return (
-    <p className="relative text-(length:--timer-size) leading-none font-semibold tabular-nums">
+    <p className="relative text-[length:var(--timer-size,3.75rem)] leading-none font-semibold tabular-nums">
       {status === "done" ? (
         "Done!"
       ) : (

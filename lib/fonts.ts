@@ -27,3 +27,21 @@ export function fontCss(id: FontId): string {
   if (timerSize) declarations.push(`--timer-size: ${timerSize};`);
   return declarations.length > 0 ? `:root { ${declarations.join(" ")} }` : "";
 }
+
+// The CSS variables a font controls. "initial" clears a variable, so the
+// var() that reads it uses its fallback: the system font and default size.
+export function fontVars(id: FontId): Record<"--app-font" | "--timer-size", string> {
+  const { variable, timerSize } = FONTS[id];
+  return {
+    "--app-font": variable ? `var(${variable})` : "initial",
+    "--timer-size": timerSize ?? "initial",
+  };
+}
+
+// Applies a font to the live page. Inline styles on <html> override the
+// server's <style> rule, which keeps the old font until the next reload.
+export function applyFont(id: FontId): void {
+  for (const [name, value] of Object.entries(fontVars(id))) {
+    document.documentElement.style.setProperty(name, value);
+  }
+}

@@ -10,7 +10,7 @@ import { savePreferences } from "@/app/actions";
 import { playAlarm, unlockAudio } from "@/lib/alarm";
 import type { Mode, Status } from "@/lib/timer";
 import { applyBackground, type BackgroundSettings } from "@/lib/background";
-import type { FontId } from "@/lib/fonts";
+import { applyFont, type FontId } from "@/lib/fonts";
 
 
 // How often the screen refreshes while running. Time is read from the clock,
@@ -44,7 +44,7 @@ export default function TimerCard({
   const durationMs = duration * 1000;
     // Saved background settings. The settings dialog will update these.
   const [background, setBackground] = useState(initialBackground);
-  const [font] = useState(initialFont);
+  const [font, setFont] = useState(initialFont);
 
   let timeLeftMs = durationMs;
   if (status === "running" && endsAt !== null) {
@@ -113,11 +113,17 @@ export default function TimerCard({
     setStatus("not_started");
   }
 
-  function handleSaveSettings({ durations: newDurations, background: newBackground }: SavedSettings) {
+  function handleSaveSettings({ 
+    durations: newDurations, 
+    background: newBackground,
+    font: newFont, 
+  }: SavedSettings) {
     setDurations(newDurations);
     setBackground(newBackground);
+    setFont(newFont);
+    applyFont(newFont);
     setIsSettingsOpen(false);
-    savePreferences({ mode, durations: newDurations, background: newBackground, font }).catch(() => {});
+    savePreferences({ mode, durations: newDurations, background: newBackground, font: newFont }).catch(() => {});
   }
 
   // Closing without saving (X or Escape) undoes any slider preview.
@@ -143,6 +149,7 @@ export default function TimerCard({
         <SettingsDialog
           durations={durations}
           background={background}
+          font={font}
           onSave={handleSaveSettings}
           onClose={handleCloseSettings}
         />

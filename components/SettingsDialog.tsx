@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type FormEvent } from "react";
 import { buttonStyles } from "./buttonStyles";
 import {
   applyBackground,
@@ -10,11 +10,13 @@ import {
   SPEED_STEP,
   type BackgroundSettings,
 } from "@/lib/background";
+import { FONTS, fontVars, isFontId, type FontId } from "@/lib/fonts";
 import { MAX_MINUTES, MIN_MINUTES, MODES, type Mode } from "@/lib/timer";
 
 export type SavedSettings = {
   durations: Record<Mode, number>; // seconds
   background: BackgroundSettings;
+  font: FontId;
 };
 
 type SettingsDialogProps = SavedSettings & {
@@ -31,7 +33,8 @@ function parseMinutes(text: string): number | null {
 
 export default function SettingsDialog({ 
   durations,
-  background, 
+  background,
+  font, 
   onSave, 
   onClose 
 }: SettingsDialogProps) {
@@ -43,6 +46,7 @@ export default function SettingsDialog({
     long: String(durations.long / 60),
   }));
   const [draftBackground, setDraftBackground] = useState(background);
+  const [draftFont, setDraftFont] = useState(font);
 
   // The dialog only exists while open, so open it as a modal on mount.
   useEffect(() => {
@@ -67,7 +71,7 @@ export default function SettingsDialog({
       if (minutes === null) return;
       saved[id] = minutes * 60;
     }
-    onSave({ durations: saved, background: draftBackground });
+    onSave({ durations: saved, background: draftBackground, font: draftFont });
   }
 
   return (
@@ -143,6 +147,35 @@ export default function SettingsDialog({
             className="accent-daisy-deep"
           />
         </label>
+
+                <div className="flex flex-col gap-1">
+          <label className="flex items-center justify-between gap-4">
+            <span>font</span>
+            <select
+              value={draftFont}
+              onChange={(event) => {
+                const { value } = event.target;
+                if (isFontId(value)) setDraftFont(value);
+              }}
+              className="rounded-lg border-2 border-taupe bg-white/70 px-2 py-1 focus:border-daisy-deep focus:outline-none"
+            >
+              {Object.entries(FONTS).map(([id, { label }]) => (
+                <option key={id} value={id}>
+                  {label}
+                </option>
+              ))}
+            </select>
+          </label>
+          {/* Preview of the chosen font. font-sans re-reads --app-font here, so
+              only this line changes until Save. */}
+          <p
+            aria-hidden="true"
+            className="rounded-lg bg-white/50 px-2 py-1 font-sans"
+            style={fontVars(draftFont) as CSSProperties}
+          >
+            Focus for 25:00, then rest. 0123456789
+          </p>
+        </div>
 
         {!isValid && (
           <p className="text-sm text-red-700">
