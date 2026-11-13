@@ -55,3 +55,11 @@
 :root {
   --bg-saturation: 100%;
 }
+
+/* Countdown sizing. Each digit sits in a slot --digit-width wide so the time
+   doesn't shift as it counts down. 1ch is the width of "0" in whatever font
+   the timer uses. Fonts with unusual digits override these values. */
+:root {
+  --digit-width: 1ch;
+  --timer-size: 3.75rem;
+}
