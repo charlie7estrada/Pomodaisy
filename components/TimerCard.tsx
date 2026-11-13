@@ -10,6 +10,7 @@ import { savePreferences } from "@/app/actions";
 import { playAlarm, unlockAudio } from "@/lib/alarm";
 import type { Mode, Status } from "@/lib/timer";
 import { applyBackground, type BackgroundSettings } from "@/lib/background";
+import type { FontId } from "@/lib/fonts";
 
 
 // How often the screen refreshes while running. Time is read from the clock,
@@ -20,12 +21,14 @@ type TimerCardProps = {
   initialMode: Mode;
   initialDurations: Record<Mode, number>; // seconds
   initialBackground: BackgroundSettings;
+  initialFont: FontId;
 };
 
 export default function TimerCard({ 
   initialMode, 
   initialDurations,
   initialBackground,
+  initialFont,
  }: TimerCardProps) {
   const [mode, setMode] = useState(initialMode);
   const [status, setStatus] = useState<Status>("not_started");
@@ -41,7 +44,7 @@ export default function TimerCard({
   const durationMs = duration * 1000;
     // Saved background settings. The settings dialog will update these.
   const [background, setBackground] = useState(initialBackground);
-
+  const [font] = useState(initialFont);
 
   let timeLeftMs = durationMs;
   if (status === "running" && endsAt !== null) {
@@ -103,7 +106,7 @@ export default function TimerCard({
     setMode(newMode);
     setStatus("not_started");
     // Not awaited: the UI updates immediately; a failed save is just not remembered.
-    savePreferences({ mode: newMode, durations, background }).catch(() => {});
+    savePreferences({ mode: newMode, durations, background, font }).catch(() => {});
   }
 
   function handleReset() {
@@ -114,7 +117,7 @@ export default function TimerCard({
     setDurations(newDurations);
     setBackground(newBackground);
     setIsSettingsOpen(false);
-    savePreferences({ mode, durations: newDurations, background: newBackground }).catch(() => {});
+    savePreferences({ mode, durations: newDurations, background: newBackground, font }).catch(() => {});
   }
 
   // Closing without saving (X or Escape) undoes any slider preview.

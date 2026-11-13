@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import { cookies } from "next/headers";
 import TimerCard from "@/components/TimerCard";
+import { fontCss } from "@/lib/fonts";
 import { PREFERENCES_COOKIE, parsePreferencesCookie } from "@/lib/preferences";
 
 export default function Home() {
@@ -18,12 +19,17 @@ export default function Home() {
 async function SavedTimerCard() {
   const cookieStore = await cookies();
   const preferences = parsePreferencesCookie(cookieStore.get(PREFERENCES_COOKIE)?.value);
+  const savedFontCss = fontCss(preferences.font);
 
   return (
-    <TimerCard 
-    initialMode={preferences.mode} 
-    initialDurations={preferences.durations} 
-    initialBackground={preferences.background}
-    />
+    <>
+      {savedFontCss && <style>{savedFontCss}</style>}
+      <TimerCard 
+        initialMode={preferences.mode} 
+        initialDurations={preferences.durations} 
+        initialBackground={preferences.background}
+        initialFont={preferences.font}
+      />
+    </>
   );
 }

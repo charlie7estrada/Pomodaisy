@@ -14,10 +14,13 @@ import {
   MODES, type Mode 
 } from "@/lib/timer";
 
+import { DEFAULT_FONT, isFontId, type FontId } from "@/lib/fonts";
+
 export type Preferences = {
   mode: Mode;
   durations: Record<Mode, number>; // seconds
   background: BackgroundSettings;
+  font: FontId;
 };
 
 export const PREFERENCES_COOKIE = "pomodaisy-prefs";
@@ -26,6 +29,7 @@ export const DEFAULT_PREFERENCES: Preferences = {
   mode: "pomodoro",
   durations: DEFAULT_DURATIONS,
   background: DEFAULT_BACKGROUND,
+  font: DEFAULT_FONT,
 };
 
 function isMode(value: unknown): value is Mode {
@@ -76,6 +80,7 @@ export function parsePreferences(input: unknown): Preferences {
         ? savedBackground.saturation
         : DEFAULT_BACKGROUND.saturation,
     },
+    font: isFontId(data.font) ? data.font : DEFAULT_FONT,
   };
 }
 
